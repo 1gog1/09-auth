@@ -3,7 +3,7 @@ import css from "./NoteForm.module.css";
 import { useId } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createNote } from "@/lib/api";
+import { createNote } from "@/lib/api/clientApi";
 import { useNoteDraftStore } from "@/lib/store/noteStore";
 import type { NewNote } from "@/types/note";
 
@@ -13,9 +13,9 @@ const NoteForm = () => {
   const router = useRouter();
   const id = useId();
 
-  const handleClickCancel = () => router.push("/notes/filter/all");
-
   const { draft, setDraft, clearDraft } = useNoteDraftStore();
+
+  const handleClickCancel = () => router.push("/notes/filter/all");
 
   const handleChange = (
     event: React.ChangeEvent<
@@ -37,7 +37,7 @@ const NoteForm = () => {
   });
 
   const handleSubmit = (formData: FormData) => {
-    const data = Object.fromEntries(formData) as unknown as NewNote;
+    const data = Object.fromEntries(formData) as NewNote;
 
     mutate(data);
   };
@@ -51,7 +51,7 @@ const NoteForm = () => {
           type="text"
           name="title"
           className={css.input}
-          defaultValue={draft?.title}
+          value={draft?.title}
           onChange={handleChange}
         />
       </div>
@@ -63,7 +63,7 @@ const NoteForm = () => {
           name="content"
           rows={8}
           className={css.textarea}
-          defaultValue={draft?.content}
+          value={draft?.content}
           onChange={handleChange}
         />
       </div>
@@ -75,7 +75,7 @@ const NoteForm = () => {
             id={`${id}-tag`}
             name="tag"
             className={css.select}
-            defaultValue={draft?.tag}
+            value={draft?.tag}
             onChange={handleChange}
           >
             {tags.map((tag) => (
